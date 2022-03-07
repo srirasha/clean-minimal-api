@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using System.Net;
+using System.Net.Mime;
 using System.Text.Json;
 
 namespace Web.Clean.Minimal.API.Middleware
@@ -22,10 +23,11 @@ namespace Web.Clean.Minimal.API.Middleware
             catch (Exception error)
             {
                 HttpResponse response = context.Response;
-                response.ContentType = "application/json";
+                response.ContentType = MediaTypeNames.Application.Json;
 
                 response.StatusCode = error switch
                 {
+                    ApplicationException => (int)HttpStatusCode.UnprocessableEntity,
                     KeyNotFoundException => (int)HttpStatusCode.NotFound,
                     ValidationException => (int)HttpStatusCode.BadRequest,
                     _ => (int)HttpStatusCode.InternalServerError,
