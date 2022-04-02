@@ -7,8 +7,6 @@ namespace Application.WeatherForecasts.Queries.GetWeatherForecast
     {
         public async Task<IEnumerable<WeatherForecast>> Handle(GetWeatherForecastQuery request, CancellationToken cancellationToken)
         {
-            throw new ApplicationException("sasas");
-
             string[] summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
 
             IEnumerable<WeatherForecast> forecast = Enumerable.Range(1, 5).Select(index =>
