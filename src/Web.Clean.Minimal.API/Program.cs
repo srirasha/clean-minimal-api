@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 
 WebApplication app = builder.Build();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
