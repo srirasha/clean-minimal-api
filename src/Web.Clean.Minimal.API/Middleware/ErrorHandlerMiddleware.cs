@@ -8,6 +8,13 @@ namespace Web.Clean.Minimal.API.Middleware
     public class ErrorHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger _logger;
+
+        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
+        {
+            _next = next;
+            _logger = logger;
+        }
 
         public ErrorHandlerMiddleware(RequestDelegate next)
         {
@@ -33,6 +40,7 @@ namespace Web.Clean.Minimal.API.Middleware
                     _ => (int)HttpStatusCode.InternalServerError,
                 };
 
+                _logger.LogError(error.Message);
                 await response.WriteAsync(JsonSerializer.Serialize(error?.Message));
             }
         }
