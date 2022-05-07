@@ -3,7 +3,7 @@ public static class ApplicationBuilderExtensions
 {
     public static IApplicationBuilder EnableSwagger(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        if (!app.Environment.IsProduction())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
