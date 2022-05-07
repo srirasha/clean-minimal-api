@@ -18,6 +18,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
@@ -27,6 +28,6 @@ app.MapGet("api/v1/weatherforecast/city/{city}", (IMediator mediator, string cit
     return mediator.Send(new GetWeatherForecastQuery(city), cancellationToken);
 })
 .WithName("GetWeatherForecast")
-.WithTags("weatherforecast");
+.WithTags("WeatherForecast");
 
 app.Run();
