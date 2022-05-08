@@ -1,6 +1,8 @@
 using Application;
 using Application.Avatars.Queries.GetAvatarById;
 using Application.Avatars.Queries.GetAvatars;
+using CSharpFunctionalExtensions;
+using Domain.Assets;
 using Infrastructure;
 using Infrastructure.Persistence.Contexts.AssetsDb.Configurations;
 using MediatR;
@@ -32,7 +34,9 @@ app.MapGet("api/v1/avatars", (IMediator mediator, CancellationToken cancellation
 
 app.MapGet("api/v1/avatars/{id}", async (IMediator mediator, string id, CancellationToken cancellationToken) =>
  {
-     await mediator.Send(new GetAvatarByIdQuery(id), cancellationToken);
+     Maybe<Avatar> maybeAvatar = await mediator.Send(new GetAvatarByIdQuery(id), cancellationToken);
+
+     return maybeAvatar.HasValue ? Results.Ok(maybeAvatar.Value) : Results.NotFound();
  })
 .WithName("GetAvatarById")
 .WithTags("Avatars");
