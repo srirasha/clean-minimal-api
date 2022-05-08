@@ -1,0 +1,7 @@
+services:
+    clean-minimal-api:
+        build: .
+        ports:
+            - "8000:80"
+        environment:
+          ASPNETCORE_ENVIRONMENT: Development
