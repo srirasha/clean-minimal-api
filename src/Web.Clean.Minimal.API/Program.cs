@@ -1,4 +1,5 @@
 using Application;
+using Application.Avatars.Queries.GetAvatarById;
 using Application.Avatars.Queries.GetAvatars;
 using Infrastructure;
 using Infrastructure.Persistence.Contexts.AssetsDb.Configurations;
@@ -27,6 +28,13 @@ app.MapGet("api/v1/avatars", (IMediator mediator, CancellationToken cancellation
     return mediator.Send(new GetAvatarsQuery(), cancellationToken);
 })
 .WithName("GetAvatars")
+.WithTags("Avatars");
+
+app.MapGet("api/v1/avatars/{id}", async (IMediator mediator, string id, CancellationToken cancellationToken) =>
+ {
+     await mediator.Send(new GetAvatarByIdQuery(id), cancellationToken);
+ })
+.WithName("GetAvatarById")
 .WithTags("Avatars");
 
 app.Run();

@@ -36,7 +36,6 @@ namespace Web.Clean.Minimal.API.Middleware
                 };
 
                 _logger.LogError(exception, exception.Message);
-                await response.WriteAsync(JsonSerializer.Serialize(exception?.Message));
             }
         }
     }
