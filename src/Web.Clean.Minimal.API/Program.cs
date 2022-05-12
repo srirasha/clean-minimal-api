@@ -44,7 +44,6 @@ app.MapGet("api/avatars/{id}", async (IMediator mediator, string id, Cancellatio
 })
 .WithName("GetAvatarById")
 .WithTags("Avatars")
-.Accepts<string>(MediaTypeNames.Application.Json)
 .Produces<Avatar>()
 .Produces(StatusCodes.Status404NotFound);
 
