@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using System.Net;
 using System.Net.Mime;
-using System.Text.Json;
 
 namespace Web.Clean.Minimal.API.Middleware
 {

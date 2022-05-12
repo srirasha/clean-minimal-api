@@ -7,7 +7,6 @@ using Infrastructure;
 using Infrastructure.Persistence.Contexts.AssetsDb.Configurations;
 using MediatR;
 using Serilog;
-using System.Net.Mime;
 using Web.Clean.Minimal.API.Extensions;
 using Web.Clean.Minimal.API.Middleware;
 
