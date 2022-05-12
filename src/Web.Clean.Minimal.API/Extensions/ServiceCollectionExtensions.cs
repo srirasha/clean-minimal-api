@@ -21,6 +21,8 @@ namespace Web.Clean.Minimal.API.Extensions
                                                   .CreateLogger();
             builder.Host.UseSerilog();
 
+            Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
+
             return builder;
         }
 
