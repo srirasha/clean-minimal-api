@@ -23,7 +23,12 @@ builder.Services.AddInfrastructure();
 WebApplication app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.EnableSwagger();
+
+if (!app.Environment.IsProduction())
+{
+    app.EnableSwagger();
+    app.UseDeveloperExceptionPage();
+}
 
 #region Avatars
 
