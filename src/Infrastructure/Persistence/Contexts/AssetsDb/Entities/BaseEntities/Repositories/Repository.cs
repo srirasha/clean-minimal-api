@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Persistence.Contexts.AssetsDb.Entities.BaseEntities.Repositories
 {
-    public class Repository<TDocument> : IMongoRepository<TDocument>
+    public class Repository<TDocument> : IRepository<TDocument>
            where TDocument : IDocument
     {
         private readonly IMongoCollection<TDocument> _collection;
@@ -44,7 +44,7 @@ namespace Infrastructure.Persistence.Contexts.AssetsDb.Entities.BaseEntities.Rep
 
         public async virtual Task<TDocument> InsertOne(TDocument document, CancellationToken cancellationToken = default)
         {
-            await _collection.InsertOneAsync(document, cancellationToken);
+            await _collection.InsertOneAsync(document, null, cancellationToken);
             return document;
         }
 

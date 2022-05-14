@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Persistence.Contexts.AssetsDb.Entities.BaseEntities.Repositories
 {
-    public interface IMongoRepository<TDocument> where TDocument : IDocument
+    public interface IRepository<TDocument> where TDocument : IDocument
     {
         IQueryable<TDocument> AsQueryable();
 

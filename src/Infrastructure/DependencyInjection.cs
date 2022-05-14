@@ -13,7 +13,7 @@ namespace Infrastructure
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            services.AddScoped(typeof(IMongoRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddSingleton<IAssetsContext, AssetsContext>();
             services.AddSingleton<IAvatarsRepository, AvatarsRepository>();
