@@ -1,32 +1,59 @@
 using Application;
-using Application.WeatherForecasts.Queries.GetWeatherForecast;
+using Application.Avatars.Queries.GetAvatarById;
+using Application.Avatars.Queries.GetAvatars;
+using CSharpFunctionalExtensions;
+using Domain.Assets;
+using Infrastructure;
+using Infrastructure.Persistence.Contexts.AssetsDb.Configurations;
 using MediatR;
+using Serilog;
+using Web.Clean.Minimal.API.Extensions;
 using Web.Clean.Minimal.API.Middleware;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApplication();
+builder.AddSerilog();
+builder.AddSwagger();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.Configure<AssetsDbConfiguration>(builder.Configuration.GetSection("AssetsDb"));
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
 
 WebApplication app = builder.Build();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (!app.Environment.IsProduction())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.EnableSwagger();
+    app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
+#region Avatars
 
-app.MapGet("api/v1/weatherforecast/city/{city}", (IMediator mediator, string city, CancellationToken cancellationToken) =>
+app.MapGet("api/avatars", (IMediator mediator, CancellationToken cancellationToken) =>
 {
-    return mediator.Send(new GetWeatherForecastQuery(city), cancellationToken);
+    return mediator.Send(new GetAvatarsQuery(), cancellationToken);
 })
-.WithName("GetWeatherForecast")
-.WithTags("weatherforecast");
+.WithName("GetAvatars")
+.WithTags("Avatars")
+.Produces<IEnumerable<Avatar>>();
+
+app.MapGet("api/avatars/{id}", async (IMediator mediator, string id, CancellationToken cancellationToken) =>
+{
+    Maybe<Avatar> maybeAvatar = await mediator.Send(new GetAvatarByIdQuery(id), cancellationToken);
+
+    return maybeAvatar.HasValue ? Results.Ok(maybeAvatar.Value) : Results.NotFound();
+})
+.WithName("GetAvatarById")
+.WithTags("Avatars")
+.Produces<Avatar>()
+.Produces(StatusCodes.Status404NotFound);
+
+#endregion
+
+app.MapGet("healthcheck", () => { return new { Message = "I am alive!" }; })
+.ExcludeFromDescription();
 
 app.Run();

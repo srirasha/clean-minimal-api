@@ -1,17 +1,18 @@
 ﻿using FluentValidation;
 using System.Net;
 using System.Net.Mime;
-using System.Text.Json;
 
 namespace Web.Clean.Minimal.API.Middleware
 {
-    public class ErrorHandlerMiddleware
+    public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger _logger;
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -20,12 +21,12 @@ namespace Web.Clean.Minimal.API.Middleware
             {
                 await _next(context);
             }
-            catch (Exception error)
+            catch (Exception exception)
             {
                 HttpResponse response = context.Response;
                 response.ContentType = MediaTypeNames.Application.Json;
 
-                response.StatusCode = error switch
+                response.StatusCode = exception switch
                 {
                     ApplicationException => (int)HttpStatusCode.UnprocessableEntity,
                     KeyNotFoundException => (int)HttpStatusCode.NotFound,
@@ -33,7 +34,7 @@ namespace Web.Clean.Minimal.API.Middleware
                     _ => (int)HttpStatusCode.InternalServerError,
                 };
 
-                await response.WriteAsync(JsonSerializer.Serialize(error?.Message));
+                _logger.LogError(exception, exception.Message);
             }
         }
     }
