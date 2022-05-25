@@ -30,7 +30,12 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<Maybe<Avatar>> GetById(string id, CancellationToken cancellationToken)
         {
-            AvatarDocument avatar = await _assetsContext.Avatars.Find(Builders<AvatarDocument>.Filter.Eq(doc => doc.Id, ObjectId.Parse(id))).FirstOrDefaultAsync(cancellationToken);
+            if (!ObjectId.TryParse(id, out ObjectId docId))
+            {
+                return Maybe<Avatar>.None;
+            }
+
+            AvatarDocument avatar = await _assetsContext.Avatars.Find(Builders<AvatarDocument>.Filter.Eq(doc => doc.Id, docId)).FirstOrDefaultAsync(cancellationToken);
 
             if (avatar == null)
             {
