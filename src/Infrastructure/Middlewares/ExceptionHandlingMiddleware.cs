@@ -25,10 +25,9 @@ namespace Infrastructure.Middlewares
             }
             catch (Exception exception)
             {
-                HttpResponse response = context.Response;
-                response.ContentType = MediaTypeNames.Application.Json;
+                context.Response.ContentType = MediaTypeNames.Application.Json;
 
-                response.StatusCode = exception switch
+                context.Response.StatusCode = exception switch
                 {
                     ApplicationException => (int)HttpStatusCode.UnprocessableEntity,
                     KeyNotFoundException => (int)HttpStatusCode.NotFound,
