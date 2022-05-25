@@ -4,29 +4,25 @@ using Application.Avatars.Queries.GetAvatars;
 using CSharpFunctionalExtensions;
 using Domain.Assets;
 using Infrastructure;
-using Infrastructure.Persistence.Contexts.AssetsDb.Configurations;
+using Infrastructure.Extensions;
+using Infrastructure.Middlewares;
 using MediatR;
-using Serilog;
-using Web.Clean.Minimal.API.Extensions;
-using Web.Clean.Minimal.API.Middleware;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.AddSerilog();
+builder.UseSerilog();
 builder.AddSwagger();
 
-builder.Services.Configure<AssetsDbConfiguration>(builder.Configuration.GetSection("AssetsDb"));
-
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder);
 
 WebApplication app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.EnableSwagger();
 
 if (!app.Environment.IsProduction())
 {
-    app.EnableSwagger();
     app.UseDeveloperExceptionPage();
 }
 
