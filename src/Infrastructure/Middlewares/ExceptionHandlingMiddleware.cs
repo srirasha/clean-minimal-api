@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Mime;
 
-namespace Web.Clean.Minimal.API.Middleware
+namespace Infrastructure.Middlewares
 {
     public class ExceptionHandlingMiddleware
     {
